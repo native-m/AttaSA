@@ -6,7 +6,7 @@ WARNING. IT REPLACES THE GAME UI TEXTURES TOO...
 1. You need a dll injector.
 2. Open your game.
 3. While inside the game, inject AttaSA.dll with the dll injector.
-4. And BAM.
+4. And BAM. (i mean the mod is running now)
 5. If you enough playing with this fucking mod, then just restart the game.
 6. Have fun...
 
