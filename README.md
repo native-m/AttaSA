@@ -3,8 +3,8 @@ Replaces most of textures in the game with Atta Halilintar face.
 WARNING. IT REPLACES THE GAME UI TEXTURES TOO...
 
 ## How to use it?
-1. Download the mod (https://github.com/native-m/AttaSA/releases).
-2. You need a dll injector. You can use this one https://toolslib.net/downloads/viewdownload/646-dll-injector-hacker/
+1. ![Download](https://github.com/native-m/AttaSA/releases) the mod.
+2. You need a dll injector. You can use this ![one](https://toolslib.net/downloads/viewdownload/646-dll-injector-hacker/)
 3. Open your game.
 4. While inside the game, inject AttaSA.dll with the dll injector.
 5. And BAM. (i mean the mod is running now)
