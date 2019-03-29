@@ -44,6 +44,7 @@ void Invoker_D3D9BeginScene();
 void MainHook_D3D9BeginScene_InitTexture(IDirect3DDevice9* pDevice);
 void ReleaseResource();
 
+// Release COM object
 template <class ComType>
 void ReleaseCom(ComType** pComObject)
 {
@@ -91,6 +92,8 @@ void Initialize()
 		MessageBox(nullptr, L"Failed to create d3d", L"ERROR", MB_OK | MB_ICONERROR);
 }
 
+
+// Initialize D3D
 bool InitD3D()
 {
 	HRESULT hr;
@@ -99,6 +102,7 @@ bool InitD3D()
 	D3DPRESENT_PARAMETERS d3dPresentParameters;
 	HWND hWnd = FindWindow(nullptr, L"GTA: San Andreas");
 
+	// Create D3D9
 	pD3D9 = Direct3DCreate9(D3D9b_SDK_VERSION);
 	if (!pD3D9)
 		return false;
@@ -113,10 +117,12 @@ bool InitD3D()
 	d3dPresentParameters.EnableAutoDepthStencil = TRUE;
 	d3dPresentParameters.AutoDepthStencilFormat = D3DFMT_D16;
 
+	// Create D3D9 Device
 	hr = pD3D9->CreateDevice(0, D3DDEVTYPE_HAL, hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &d3dPresentParameters, &pDevice);
 	if (FAILED(hr))
 		return false;
 
+	// Get vtable and prepare the hooks
 	HookLib::Utils::GetVMTPointer(pDevice, g_pD3D9Vtable);
 	g_pD3D9DrawIndexedPrimitive = (D3D9DrawIndexedPrimitive)HookLib::DetourFunction((uint8_t*)g_pD3D9Vtable[82], (uint8_t*)Hook_D3D9DrawIndexedPrimitive, 5);
 	g_pD3D9BeginScene = (uintptr_t)HookLib::DetourMemory(g_pD3D9Vtable[41] + 0xD0, Invoker_D3D9BeginScene, 6);
@@ -128,11 +134,13 @@ bool InitD3D()
 
 void __stdcall Hook_D3D9DrawIndexedPrimitive(IDirect3DDevice9 * pDevice, D3DPRIMITIVETYPE PrimType, INT BaseVertexIndex, UINT MinVertexIndex, UINT NumVertices, UINT StartIndex, UINT PrimCount)
 {
+	// Force set to Atta texture
 	if (NumVertices > 24 && g_pAttaTexture != nullptr)
 	{
 		pDevice->SetTexture(0, g_pAttaTexture);
 	}
 
+	// Draw!
 	return g_pD3D9DrawIndexedPrimitive(pDevice, PrimType, BaseVertexIndex, MinVertexIndex, NumVertices, StartIndex, PrimCount);
 }
 
@@ -149,6 +157,7 @@ void Invoker_D3D9BeginScene()
 	// invoke the main hook
 	__asm
 	{
+		// invoke MainHook_D3D9BeginScene_InitTexture
 		push[ebp + 8]
 		call MainHook_D3D9BeginScene_InitTexture
 		add esp, 4
@@ -161,6 +170,7 @@ void Invoker_D3D9BeginScene()
 	}
 }
 
+// Prepare Atta texture
 void MainHook_D3D9BeginScene_InitTexture(IDirect3DDevice9 * pDevice)
 {
 	HRESULT hr;
